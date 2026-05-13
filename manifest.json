@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Lumoura",
+  "version": "1.2.3",
+  "description": "i-Ready Study Tool",
+  "permissions": [
+    "sidePanel",
+    "scripting",
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "action": {
+    "default_title": "EndXL"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["marked.min.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
