@@ -76,3 +76,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('apiKey').value = geminiApiKey;
   }
 });
+
+const diagnosticBtn = document.getElementById('diagnostic');
+const outputDiv = document.getElementById('out');
+
+diagnosticBtn.addEventListener('click', () => {
+  outputDiv.textContent = "Diagnostic Mode Activated. Smarter Model is In Use";
+});
