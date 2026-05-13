@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      width: 380px;
+      font-family: Arial, sans-serif;
+      background: #0f1115;
+      color: #e6e6e6;
+    }
+
+    .container {
+      padding: 14px;
+    }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #ffffff;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #1a1f2a;
+      border: 1px solid #2a3242;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    textarea {
+      resize: none;
+      height: 70px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #4f8cff, #2f6fff);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .output {
+      margin-top: 12px;
+      background: #0b0e14;
+      border: 1px solid #1f2633;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      min-height: 60px;
+      white-space: normal;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .label {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>i-Ready Assistant</h2>
+
+    <div class="label">API Key</div>
+    <input type="password" id="apiKey" placeholder="Enter Gemini API key">
+
+      
+    <input type="hidden" id="prompt" value="Answer the question as basically as possible while still providing an explanation without using $\boxed or $\frac in the text">
+
+
+    <button id="run">GET ANSWER</button>
+
+    <div class="output" id="out">Ready.</div>
+  </div>
+  
+  <script src="marked.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
