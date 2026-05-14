@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Lumoura",
+  "name": "Amethyst",
   "version": "1.2.3",
   "description": "i-Ready Study Tool",
   "permissions": [
@@ -21,7 +21,7 @@
     "default_path": "popup.html"
   },
   "action": {
-    "default_title": "EndXL"
+    "default_title": "Amethyst"
   },
   "web_accessible_resources": [
     {
@@ -29,4 +29,9 @@
       "matches": ["<all_urls>"]
     }
   ]
+   "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
 }
