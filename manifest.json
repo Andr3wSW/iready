@@ -18,7 +18,7 @@
     "service_worker": "background.js"
   },
   "side_panel": {
-    "default_path": "sidepanel.html"
+    "default_path": "popup.html"
   },
   "action": {
     "default_title": "Amethyst"
