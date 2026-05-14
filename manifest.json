@@ -11,14 +11,14 @@
     "tabs"
   ],
   "host_permissions": [
-    "<all_urls>",
+    "https://*://*",
     "https://generativelanguage.googleapis.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "side_panel": {
-    "default_path": "popup.html"
+    "default_path": "sidepanel.html"
   },
   "action": {
     "default_title": "Amethyst"
@@ -28,8 +28,8 @@
       "resources": ["marked.min.js"],
       "matches": ["<all_urls>"]
     }
-  ]
-   "icons": {
+  ],
+  "icons": {
     "16": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
