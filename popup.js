@@ -1,34 +1,83 @@
-document.getElementById('run').onclick = async () => {
-  const out = document.getElementById('out');
-  const apiKeyInput = document.getElementById('apiKey');
-  const promptInput = document.getElementById('prompt');
+const runBtn = document.getElementById('run');
+const diagnosticBtn = document.getElementById('diagnostic');
+const outputDiv = document.getElementById('out');
+const apiKeyInput = document.getElementById('apiKey');
+const promptInput = document.getElementById('prompt');
 
+let diagnosticMode = false;
+
+// Load saved API key
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { geminiApiKey } = await chrome.storage.local.get('geminiApiKey');
+
+    if (geminiApiKey) {
+      apiKeyInput.value = geminiApiKey;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// Toggle diagnostic mode
+diagnosticBtn.addEventListener('click', () => {
+  diagnosticMode = !diagnosticMode;
+
+  if (diagnosticMode) {
+    diagnosticBtn.textContent = 'DISABLE DIAGNOSTIC MODE';
+    outputDiv.textContent = 'Diagnostic Mode Activated. Smarter Model is In Use';
+  } else {
+    diagnosticBtn.textContent = 'ENABLE DIAGNOSTIC MODE';
+    outputDiv.textContent = 'Diagnostic Mode Disabled.';
+  }
+});
+
+// Main run button
+runBtn.addEventListener('click', async () => {
   const key = apiKeyInput.value.trim();
-  const userPrompt = promptInput.value.trim() || 'Solve this problem step by step.';
+
+  const userPrompt =
+    promptInput.value.trim() ||
+    'Solve this problem step by step.';
 
   if (!key) {
-    out.innerText = 'Please enter your Gemini API key.';
+    outputDiv.innerText = 'Please enter your Gemini API key.';
     return;
   }
 
-  out.innerText = 'Capturing screen...';
+  outputDiv.innerText = 'Capturing screen...';
 
   try {
-    // Save key
-    await chrome.storage.local.set({ geminiApiKey: key });
-
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-    // Screenshot visible tab
-    const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
-      format: 'png'
+    // Save API key
+    await chrome.storage.local.set({
+      geminiApiKey: key
     });
+
+    // Get active tab
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    });
+
+    // Capture screenshot
+    const dataUrl = await chrome.tabs.captureVisibleTab(
+      tab.windowId,
+      {
+        format: 'png'
+      }
+    );
 
     const base64 = dataUrl.split(',')[1];
 
-    out.innerText = 'Sending to Gemini...';
+    outputDiv.innerText = 'Sending to Gemini...';
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+    // Diagnostic mode uses stronger model
+    const model = diagnosticMode
+      ? 'gemini-2.5-pro'
+      : 'gemini-2.5-flash';
+
+    const url =
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -40,7 +89,8 @@ document.getElementById('run').onclick = async () => {
           {
             parts: [
               {
-                text: `You are a math assistant. Solve the problem shown in the image. User request: ${userPrompt}`
+                text:
+                  `You are a math assistant. Solve the problem shown in the image. User request: ${userPrompt}`
               },
               {
                 inlineData: {
@@ -57,29 +107,19 @@ document.getElementById('run').onclick = async () => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error?.message || 'Request failed');
+      throw new Error(
+        data.error?.message || 'Request failed'
+      );
     }
 
-    const aiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
+    const aiResponse =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      'No response received.';
 
-    out.innerHTML = marked.parse(aiResponse);
+    outputDiv.innerHTML = marked.parse(aiResponse);
 
   } catch (err) {
     console.error(err);
-    out.innerText = 'Error: ' + err.message;
+    outputDiv.innerText = 'Error: ' + err.message;
   }
-};
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const { geminiApiKey } = await chrome.storage.local.get('geminiApiKey');
-  if (geminiApiKey) {
-    document.getElementById('apiKey').value = geminiApiKey;
-  }
-});
-
-const diagnosticBtn = document.getElementById('diagnostic');
-const outputDiv = document.getElementById('out');
-
-diagnosticBtn.addEventListener('click', () => {
-  outputDiv.textContent = "Diagnostic Mode Activated. Smarter Model is In Use";
 });
